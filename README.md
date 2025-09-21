@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddlingo - Language Exchange for University Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 { width: 300px; height: 300px; top: 10%; left: 80%; animation-delay: 0s; }
+        .orb-2 { width: 200px; height: 200px; top: 70%; left: 10%; animation-delay: 7s; }
+        .orb-3 { width: 150px; height: 150px; top: 40%; left: 70%; animation-delay: 14s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(15px) rotate(240deg); }
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #8b5cf6;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ffffff, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+            to { text-shadow: 0 0 30px rgba(139, 92, 246, 0.6); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .primary-button {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .primary-button:hover::before {
+            left: 100%;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 80px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #8b5cf6;
+        }
+
+        .feature-card p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-item {
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #8b5cf6;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .primary-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">BUDDLINGO</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#signup">Contact</a></li>
+            </ul>
+            <a href="#signup" class="cta-button">Join Waitlist</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>SPEAK FLUENTLY.<br>CONNECT GLOBALLY.</h1>
+            <p class="hero-subtitle">The exclusive language exchange platform for university students</p>
+            <p class="hero-description">
+                Connect with verified university students worldwide for meaningful language practice. 
+                Pure academic learning with peers who share your goals and understand student life.
+            </p>
+            <div class="hero-buttons">
+                <a href="#signup" class="primary-button">Join the Waitlist</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Universities</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Languages</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Academic Focus</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 1.3rem; color: #cbd5e1; line-height: 1.8; margin-bottom: 30px;">
+                    BuddLingo was founded by <strong style="color: #8b5cf6;">Edward Budden</strong>, a French and Spanish student at Durham University, driven by a love for languages and a desire to make language learning more authentic.
+                </p>
+                <p style="font-size: 1.2rem; color: #94a3b8; line-height: 1.7; margin-bottom: 30px;">
+                    During his A-levels, Edward connected with native speakers online — an experience that not only transformed his fluency but deepened his cultural understanding and exam confidence getting him from a C in first year to an A*. Real conversations changed everything.
+                </p>
+                <p style="font-size: 1.2rem; color: #94a3b8; line-height: 1.7; margin-bottom: 30px;">
+                    Now, he's on a mission to bring that same impact to university students across the world. BuddLingo is more than just a language exchange app — it's a community built by a student, for students.
+                </p>
+                <div style="margin-top: 50px; padding: 30px; background: rgba(139, 92, 246, 0.1); border-radius: 20px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                    <p style="font-size: 1.1rem; color: #8b5cf6; font-weight: 600; margin-bottom: 10px;">
+                        "Real conversations with native speakers didn't just improve my grades — they transformed my entire relationship with language learning."
+                    </p>
+                    <p style="font-size: 1rem; color: #94a3b8;">
+                        — Edward Budden, Founder
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Why Choose Buddlingo?</h2>
+            <p class="features-subtitle">Built specifically for university students who are serious about language learning</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>University Verified</h3>
+                    <p>All users must verify their university enrollment, ensuring you connect with serious students who share your academic goals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Matching</h3>
+                    <p>Get personalized partner suggestions based on your interests, language levels, and study goals. Browse detailed student profiles and handpick your ideal language exchange partners, or let our algorithm find the perfect matches for you.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Safe & Focused</h3>
+                    <p>Academic-focused environment with verified students. Pure language exchange in a secure, professional setting.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Global Network</h3>
+                    <p>Connect with native speakers from universities worldwide. Practice with peers who understand student life.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Seamless Experience</h3>
+                    <p>HD video calls, smart timezone syncing, and conversation prompts that keep your sessions productive.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Track Progress</h3>
+                    <p>Language learning dashboard to monitor your improvement and stay motivated throughout your journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="signup">
+        <div class="container">
+            <h2>Ready to Transform Your Language Learning?</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #94a3b8; margin-bottom: 40px;">Join the waitlist and be among the first to experience Buddlingo when we launch</p>
+            <div style="max-width: 500px; margin: 0 auto;">
+                <form action="https://formspree.io/f/mnnvyvww" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                    <input type="email" name="email" placeholder="Enter your email address" required
+                           style="padding: 18px; border: 2px solid rgba(139, 92, 246, 0.3); border-radius: 50px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1.1rem; text-align: center; backdrop-filter: blur(10px);">
+                    <input type="text" name="university" placeholder="Your university name" required
+                           style="padding: 18px; border: 2px solid rgba(139, 92, 246, 0.3); border-radius: 50px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1.1rem; text-align: center; backdrop-filter: blur(10px);">
+                    <button type="submit" class="primary-button" style="width: 100%;">
+                        Join the Waitlist →
+                    </button>
+                </form>
+                <p style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8; text-align: center;">
+                    Be the first to know when we launch • Exclusive early access
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p style="text-align: center; padding: 50px 0; color: #94a3b8;">&copy; 2025 Buddlingo. Made with ❤️ for university students worldwide.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(0, 0, 0, 0.8)';
+            } else {
+                header.style.background = 'rgba(0, 0, 0, 0.3)';
+            }
+        });
+
+        // Add form submission handling
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            
+            // Show loading state
+            submitButton.textContent = 'Joining...';
+            submitButton.disabled = true;
+            
+            try {
+                const response = await fetch(e.target.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('Thanks for joining the waitlist! We\'ll notify you as soon as Buddlingo launches.');
+                    e.target.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again or contact us directly.');
+            } finally {
+                // Reset button
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
